@@ -173,7 +173,7 @@
 
 <script>
 /* =====================================================================
-   İLAHİYAT SINAV HAZIRLIK — v1.0
+   İLAHİYAT SINAV HAZIRLIK — v1.1
    Dersler: Anadolu AÖF İlahiyat ön lisans zorunlu dersleri.
    Sorular: Anadolu Üniversitesi resmi çıkmış sınav PDF'leri (Telegram) + lolonolo.com
    Cevaplar resmi cevap anahtarından. Arapça sorular PDF'ten görüntü olarak kesildi.
@@ -3706,6 +3706,9 @@ function gname(u){const g=C().groups.find(g=>g[0]===u);return g?(g[2]||g[1]):"";
 function coursePool(){return QUESTIONS.filter(q=>q.d===course);}
 function inUnit(q,u){if(u===0)return true;const gs=[q.u].concat(q.x||[]);const cb=(C().combos||{})[u];return cb?gs.some(g=>cb.includes(g)):gs.includes(u);}
 function chipName(u){const ch=(C().chips||[]).find(x=>x[0]===u);return ch?ch[1]:gname(u);}
+/* açılışta Vize seçili gelsin (dersin vize sorusu yoksa Tümü) */
+function defUnit(){return coursePool().some(q=>inUnit(q,1))?1:0;}
+unit=defUnit();
 function pool(){const p=coursePool();return p.filter(q=>inUnit(q,unit));}
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));const t=a[i];a[i]=a[j];a[j]=t;}return a;}
 /* test turu: havuzdan karışık en çok 20 soru */
@@ -3727,7 +3730,7 @@ function renderHeader(){
 }
 const courseEl=document.getElementById("course");
 courseEl.innerHTML=COURSES.map(c=>`<option value="${c.id}">${c.name} · ${QUESTIONS.filter(q=>q.d===c.id).length} soru</option>`).join("");
-courseEl.addEventListener("change",()=>{course=courseEl.value;saved.course=course;save();unit=0;startRound();renderHeader();renderUnits();setMode("test");});
+courseEl.addEventListener("change",()=>{course=courseEl.value;saved.course=course;save();unit=defUnit();startRound();renderHeader();renderUnits();setMode("test");});
 
 /* unit chips */
 const unitsEl=document.getElementById("units");
